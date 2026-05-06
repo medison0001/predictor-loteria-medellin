@@ -79,21 +79,29 @@ const Utils = {
      * Convierte fecha a formato español legible
      */
     formatearFecha(fechaStr) {
-        // Convertir formato dd/mm/yyyy a formato ISO yyyy-mm-dd
-        const partes = fechaStr.split('/');
-        if (partes.length === 3) {
-            const [dia, mes, año] = partes;
-            const fechaISO = `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-            const fecha = new Date(fechaISO + 'T00:00:00');
-            
-            if (!isNaN(fecha.getTime())) {
-                return fecha.toLocaleDateString('es-CO', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
+        // Manejar tanto formato dd/mm/yyyy como yyyy-mm-dd
+        let fecha;
+        
+        if (fechaStr.includes('/')) {
+            // Formato dd/mm/yyyy - convertir a formato ISO
+            const partes = fechaStr.split('/');
+            if (partes.length === 3) {
+                const [dia, mes, año] = partes;
+                const fechaISO = `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                fecha = new Date(fechaISO + 'T00:00:00');
             }
+        } else if (fechaStr.includes('-')) {
+            // Formato ISO yyyy-mm-dd
+            fecha = new Date(fechaStr + 'T00:00:00');
+        }
+        
+        if (fecha && !isNaN(fecha.getTime())) {
+            return fecha.toLocaleDateString('es-CO', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
         }
         
         // Si hay error, devolver la fecha original
@@ -163,14 +171,7 @@ const Utils = {
                 campo.classList.remove('error');
             }
             
-            // Validación específica para fecha DD/MM/YYYY
-            if (campo.id === 'fechaResultado' && campo.value.trim()) {
-                const fechaRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/[0-9]{4}$/;
-                if (!fechaRegex.test(campo.value.trim())) {
-                    errores.push('La fecha debe estar en formato DD/MM/AAAA');
-                    campo.classList.add('error');
-                }
-            }
+            // Para input date no necesitamos validación manual del formato
         });
         
         return errores;
@@ -407,17 +408,17 @@ const FormularioController = {
     /**
      * Inicializa los formularios
      */
-    inicializar() {
+    async inicializar() {
         const formulario = document.getElementById('formularioResultado');
         if (formulario) {
             formulario.addEventListener('submit', this.manejarEnvioResultado.bind(this));
         }
         
-        // Configurar fecha por defecto (hoy)
+        // Inicializar con datos del próximo sorteo
         const campoFecha = document.getElementById('fechaResultado');
-        if (campoFecha) {
-            const hoy = new Date().toISOString().split('T')[0];
-            campoFecha.value = hoy;
+        const campoSorteo = document.getElementById('sorteoResultado');
+        if (campoFecha && campoSorteo) {
+            await this.inicializarFormularioConDatos(campoFecha, campoSorteo);
         }
     },
     
@@ -437,8 +438,14 @@ const FormularioController = {
         
         // Recopilar datos del formulario
         const formData = new FormData(formulario);
+        
+        // Convertir fecha de ISO a DD/MM/AAAA para la API
+        const fechaISO = formData.get('fecha'); // yyyy-mm-dd
+        const fechaParts = fechaISO.split('-'); // [yyyy, mm, dd]
+        const fechaDDMMAAAA = `${fechaParts[2]}/${fechaParts[1]}/${fechaParts[0]}`;
+        
         const datos = {
-            fecha: formData.get('fecha'),
+            fecha: fechaDDMMAAAA,
             sorteo: parseInt(formData.get('sorteo')),
             numero: parseInt(formData.get('numero')),
             serie: parseInt(formData.get('serie'))
@@ -524,7 +531,7 @@ const FormularioController = {
             if (response.success && response.data && response.data.proximo_sorteo) {
                 const proximo = response.data.proximo_sorteo;
                 
-                // Establecer fecha (formato yyyy-mm-dd para input date)
+                // Establecer fecha en formato ISO para input date (yyyy-mm-dd)
                 const fechaParts = proximo.fecha_corta.split('/'); // dd/mm/yyyy
                 const fechaISO = `${fechaParts[2]}-${fechaParts[1].padStart(2, '0')}-${fechaParts[0].padStart(2, '0')}`;
                 campoFecha.value = fechaISO;
@@ -536,13 +543,13 @@ const FormularioController = {
             } else {
                 // Fallback: fecha manual (viernes siguiente)
                 console.log('⚠️ No se pudo obtener datos del próximo sorteo, usando fallback');
-                campoFecha.value = '2026-05-08'; // 8 de Mayo
+                campoFecha.value = '2026-05-08'; // 8 de Mayo en formato ISO
                 campoSorteo.value = 4834; // Número estimado
             }
         } catch (error) {
             console.error('❌ Error inicializando formulario:', error);
             // Fallback en caso de error
-            campoFecha.value = '2026-05-08';
+            campoFecha.value = '2026-05-08'; // Formato ISO
             campoSorteo.value = 4834;
         }
     }
@@ -719,7 +726,7 @@ class LoteriaMedellinApp {
         
         try {
             // Inicializar controladores
-            FormularioController.inicializar();
+            await FormularioController.inicializar();
             
             // Cargar datos iniciales en paralelo
             await Promise.all([
