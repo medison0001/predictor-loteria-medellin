@@ -1,0 +1,229 @@
+# === ARCHIVOS DE PYTHON ===
+# Archivos compilados / optimizados / DLL
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Extensiones C
+*.so
+
+# Distribución / empaquetado
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usualmente estos archivos se escriben por un script de python desde un template
+#  antes de que PyInstaller construya el exe, para inyectar fecha/otras infos en él.
+*.manifest
+*.spec
+
+# === ENTORNOS VIRTUALES ===
+# Entornos virtuales de Python
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# === VARIABLES DE ENTORNO ===
+# Variables de entorno locales
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === BASE DE DATOS ===
+# EXCEPCIÓN: Permitir la base de datos principal del proyecto
+!loteria_medellin.db
+
+# Base de datos SQLite de desarrollo (otras)
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de base de datos temporales
+*.db-shm
+*.db-wal
+
+# === JUPYTER NOTEBOOK ===
+.ipynb_checkpoints
+
+# === ENTORNOS DE DESARROLLO ===
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   Según la documentación de pipenv, se recomienda incluir Pipfile.lock en control de versiones.
+#   Sin embargo, en caso de tener colaboradores usando diferentes plataformas, es mejor excluirlo.
+#Pipfile.lock
+
+# === TESTING ===
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# === FRAMEWORKS WEB ===
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# === DOCUMENTACIÓN ===
+# Sphinx documentation
+docs/_build/
+
+# === IDES Y EDITORES ===
+# PyCharm
+#  JetBrains PyCharm
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# === SISTEMA OPERATIVO ===
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# === ARCHIVOS DE LOGS Y TEMPORALES ===
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Archivos temporales
+*.tmp
+*.temp
+temp/
+tmp/
+
+# === ESPECÍFICO DEL PROYECTO ===
+# EXCEPCIÓN: Permitir el archivo CSV principal de datos históricos
+!datos/RESULTADOS_PREMIO_MAYOR_LOTERIA_DE_MEDELLIN_HASTA_ABRIL_2026.csv
+
+# Archivos de datos sensibles o de gran tamaño (otros)
+datos/*.csv
+datos/*.json
+datos/*.xlsx
+datos/*.xls
+
+# Archivos de respaldo
+*.backup
+*.bak
+*.orig
+
+# Archivos de configuración local específicos
+config_local.py
+settings_local.py
+
+# Archivos de análisis y reportes temporales
+analisis/
+reportes/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+!static/**/*.png
+!static/**/*.jpg
+!static/**/*.jpeg
+!static/**/*.gif
+
+# === HERRAMIENTAS DE DESARROLLO ===
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pylint
+pylint-report.txt
+
+# === OTROS ===
+# Archivos de configuración de herramientas
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Certificados y claves
+*.pem
+*.key
+*.crt
+*.cer

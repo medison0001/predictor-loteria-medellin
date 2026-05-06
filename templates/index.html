@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción - Lotería de Medellín</title>
+    <link rel="stylesheet" href="/static/css/estilos.css">
+    <meta name="description" content="Predictor inteligente de números para la Lotería de Medellín basado en análisis estadístico">
+</head>
+<body>
+    <!-- Encabezado Principal -->
+    <header class="encabezado-principal">
+        <div class="contenedor">
+            <h1 class="titulo-principal">
+                <span class="icono-titulo">🔮</span>
+                Predicción - Lotería de Medellín
+            </h1>
+            <p class="subtitulo">Predictor inteligente basado en análisis estadístico</p>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="contenedor-principal">
+        
+        <!-- Panel de Predicción Actual -->
+        <section class="panel-prediccion">
+            <div class="contenedor">
+                <h2 class="titulo-seccion">🎯 Predicción Actual</h2>
+                
+                <div class="prediccion-loading" id="prediccionLoading">
+                    <div class="loader"></div>
+                    <p>Analizando patrones estadísticos...</p>
+                </div>
+                
+                <div class="prediccion-contenido" id="prediccionContenido" style="display: none;">
+                    <!-- Número y Serie Predichos -->
+                    <div class="numeros-predichos">
+                        <div class="numero-principal">
+                            <h3>Número Predicho</h3>
+                            <div class="numero-display">
+                                <span class="digito" id="digito1">0</span>
+                                <span class="digito" id="digito2">0</span>
+                                <span class="digito" id="digito3">0</span>
+                                <span class="digito" id="digito4">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="serie-principal">
+                            <h3>Serie Predicha</h3>
+                            <div class="serie-display">
+                                <span class="digito-serie" id="serie1">0</span>
+                                <span class="digito-serie" id="serie2">0</span>
+                                <span class="digito-serie" id="serie3">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nivel de Confianza -->
+                    <div class="confianza-contenedor">
+                        <h4>Nivel de Confianza</h4>
+                        <div class="confianza-bar">
+                            <span class="confianza-nivel" id="confianzaNivel">MEDIO</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Próximo Sorteo -->
+                    <div class="proximo-sorteo">
+                        <h4>Próximo Sorteo</h4>
+                        <div class="info-sorteo" id="infoSorteo">
+                            <span class="fecha-sorteo">Viernes 2 de Mayo, 2026</span>
+                            <span class="contador-dias">En 3 días</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Top 5 Candidatos -->
+                    <div class="candidatos-grid">
+                        <div class="candidatos-numeros">
+                            <h4>Top 5 Números Candidatos</h4>
+                            <ul id="top5Numeros" class="lista-candidatos">
+                                <!-- Se llena dinámicamente -->
+                            </ul>
+                        </div>
+                        
+                        <div class="candidatos-series">
+                            <h4>Top 5 Series Candidatas</h4>
+                            <ul id="top5Series" class="lista-candidatos">
+                                <!-- Se llena dinámicamente -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Explicación de la Predicción -->
+                    <div class="explicacion-prediccion">
+                        <h4>¿Por qué estos números?</h4>
+                        <div class="explicacion-texto" id="explicacionTexto">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Panel de Ingreso de Resultados -->
+        <section class="panel-ingreso">
+            <div class="contenedor">
+                <h2 class="titulo-seccion">📝 Ingresar Nuevo Resultado</h2>
+                
+                <form class="formulario-resultado" id="formularioResultado">
+                    <div class="campos-grid">
+                        <div class="campo">
+                            <label for="fechaResultado">Fecha del Sorteo</label>
+                            <input type="text" id="fechaResultado" name="fecha" placeholder="DD/MM/AAAA" pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$" title="Formato: DD/MM/AAAA" required>
+                        </div>
+                        
+                        <div class="campo">
+                            <label for="sorteoResultado">Número de Sorteo</label>
+                            <input type="number" id="sorteoResultado" name="sorteo" min="1" max="9999" required>
+                        </div>
+                        
+                        <div class="campo">
+                            <label for="numeroResultado">Número Ganador</label>
+                            <input type="number" id="numeroResultado" name="numero" min="0" max="9999" 
+                                   placeholder="0000" required>
+                        </div>
+                        
+                        <div class="campo">
+                            <label for="serieResultado">Serie Ganadora</label>
+                            <input type="number" id="serieResultado" name="serie" min="0" max="999" 
+                                   placeholder="000" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="boton-principal">
+                        <span class="icono-boton">💾</span>
+                        Guardar Resultado y Evaluar Predicción
+                    </button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Panel de Retroalimentación -->
+        <section class="panel-retroalimentacion" id="panelRetroalimentacion" style="display: none;">
+            <div class="contenedor">
+                <h2 class="titulo-seccion">🧠 Retroalimentación del Sistema</h2>
+                <div class="retroalimentacion-contenido" id="retroalimentacionContenido">
+                    <!-- Se llena dinámicamente después de ingresar un resultado -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Historial de Resultados -->
+        <section class="panel-historial">
+            <div class="contenedor">
+                <h2 class="titulo-seccion">📊 Últimos Resultados</h2>
+                
+                <div class="historial-loading" id="historialLoading">
+                    <div class="loader"></div>
+                    <p>Cargando historial...</p>
+                </div>
+                
+                <div class="historial-contenedor" id="historialContenedor" style="display: none;">
+                    <div class="tabla-responsive">
+                        <table class="tabla-historial">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Sorteo</th>
+                                    <th>Número</th>
+                                    <th>Serie</th>
+                                    <th>Día</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaHistorialBody">
+                                <!-- Se llena dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Estadísticas Generales -->
+        <section class="panel-estadisticas">
+            <div class="contenedor">
+                <h2 class="titulo-seccion">📈 Estadísticas y Análisis</h2>
+                
+                <div class="estadisticas-grid">
+                    <!-- Números Calientes -->
+                    <div class="stat-panel numeros-calientes">
+                        <h3>🔥 Números Calientes</h3>
+                        <p class="stat-descripcion">Los más frecuentes en la historia</p>
+                        <ul id="listaCalientes" class="lista-numeros">
+                            <!-- Se llena dinámicamente -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Números Fríos -->
+                    <div class="stat-panel numeros-frios">
+                        <h3>🧊 Números Fríos</h3>
+                        <p class="stat-descripcion">Los que tienen mayor tiempo sin salir</p>
+                        <ul id="listaFrios" class="lista-numeros">
+                            <!-- Se llena dinámicamente -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Precisión del Sistema -->
+                    <div class="stat-panel precision-sistema">
+                        <h3>🎯 Precisión del Sistema</h3>
+                        <div id="precisionContenido" class="precision-contenido">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Información y Advertencias -->
+        <section class="panel-info">
+            <div class="contenedor">
+                <div class="info-loteria">
+                    <h3>ℹ️ Sobre la Lotería de Medellín</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Frecuencia:</strong> Todos los viernes (sábado si es festivo)
+                        </div>
+                        <div class="info-item">
+                            <strong>Números:</strong> 4 dígitos (0000 a 9999)
+                        </div>
+                        <div class="info-item">
+                            <strong>Series:</strong> 3 dígitos (000 a 999)
+                        </div>
+                        <div class="info-item">
+                            <strong>Historia:</strong> Datos desde enero 2007
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advertencia">
+                    <h4>⚠️ Importante</h4>
+                    <p>
+                        Este es un sistema de análisis estadístico con fines educativos y de entretenimiento. 
+                        La lotería es un juego de azar completamente aleatorio. 
+                        <strong>Ningún sistema puede garantizar predicciones correctas.</strong>
+                        Juegue responsablemente.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Pie de Página -->
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <p>&copy; 2026 Predicción Lotería de Medellín - Sistema de Análisis Estadístico</p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="/static/js/app.js" defer></script>
+</body>
+</html>
